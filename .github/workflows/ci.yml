@@ -16,7 +16,15 @@ jobs:
 
    
     steps:
+
     - uses: actions/checkout@v3
-    - run: echo "Hello Pipeline world"
-    - run: ls -l
-    
+    - run: docker-compose -f docker-compose-build.yaml build --parallel
+    - run: docker tag udagram-frontend:local princenuel/udagram-frontend2
+    - run: docker tag udagram-api-user princenuel/udagram-api-user2
+    - run: docker tag udagram-api-feed princenuel/udagram-api-feed2
+    - run: docker tag reverseproxy princenuel/reverseproxy2
+    - run: echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{secrets.DOCKER_USERNAME}}" --password-stdin
+    - run: docker push princenuel/udagram-frontend2
+    - run: docker push princenuel/udagram-api-user2
+    - run: docker push princenuel/udagram-api-feed2
+    - run: docker push princenuel/reverseproxy2
